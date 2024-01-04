@@ -1,0 +1,57 @@
+# NVAE model
+python train_vae.py --data ./datasets/gpr-lmdb --root ./checkpoints --save latent_nn/vae --dataset gpr \
+    --epochs 1000 --batch_size 4 --warmup_epochs 10 \
+    --weight_decay_norm 1e-2 --arch_instance res_bnswish \
+    --kl_anneal_portion 0.3 --kl_max_coeff 1.0 \
+    --num_nf 0 \
+    --num_latent_scales 2 --num_groups_per_scale 3 --num_latent_per_group 20 \
+    --num_channels_enc 32 --num_preprocess_blocks 2 --num_preprocess_cells 2 --num_cell_per_cond_enc 2 \
+    --num_channels_dec 32 --channel_mult 1 2 2 2 --num_postprocess_blocks 2 --num_postprocess_cells 2 --num_cell_per_cond_dec 2 \
+    --seed 1 --num_process_per_node 1 --use_se
+
+# Linear interpolation
+python gpr_vae_1to1_test.py --checkpoint ./checkpoints/latent_nn/vae/checkpoint_epoch_999.pt --root ./samples/gpr_testing \
+    --interp_type linear
+
+# Latent analysis
+python gpr_vae_1to1_latent_analysis.py --checkpoint ./checkpoints/latent_nn/vae/checkpoint_epoch_999.pt --latent_index 0
+
+# Generate latents
+python gpr_latent_nn_latents.py --checkpoint ./checkpoints/latent_nn/vae/checkpoint_epoch_999.pt
+
+python gpr_latent_dec_latents.py --checkpoint ./checkpoints/latent_nn/vae/checkpoint_epoch_999.pt
+
+# Train nn for interpolation
+python gpr_latent_nn_train.py --latents ./latent_nn/latents/latent_nn/
+
+python gpr_latent_nn_conv_train2.py --latents ./latent_nn/latents/latent_nn/ --checkpoint_vae ./checkpoints/latent_nn/vae/checkpoint_epoch_540.pt
+
+python gpr_latent_nn_conv_train.py --latents ./latent_nn/latents/latent_nn/
+
+# Test nn + vae
+python gpr_latent_nn_test.py --checkpoint_vae ./checkpoints/latent_nn/vae/checkpoint_epoch_999.pt --checkpoint_nn ./latent_nn/checkpoints/checkpoint.pt
+
+python gpr_latent_nn_conv_test2.py --checkpoint_vae ./checkpoints/latent_nn/vae/checkpoint_epoch_540.pt --checkpoint_nn ./latent_nn/checkpoints/checkpoint_conv.pt
+
+python gpr_latent_nn_conv_test.py --checkpoint_vae ./checkpoints/latent_nn/vae/checkpoint_epoch_999.pt --checkpoint_nn ./latent_nn/checkpoints/
+
+python train_vae.py --data ./datasets/gpr-lmdb --root ./checkpoints --save latent_nn_test/vae --dataset gpr \
+    --epochs 1000 --batch_size 4 --warmup_epochs 10 \
+    --weight_decay_norm 1e-2 --arch_instance res_bnswish \
+    --kl_anneal_portion 0.3 --kl_max_coeff 1.0 \
+    --num_nf 0 \
+    --num_latent_scales 2 --num_groups_per_scale 3 --num_latent_per_group 20 \
+    --num_channels_enc 32 --num_preprocess_blocks 2 --num_preprocess_cells 2 --num_cell_per_cond_enc 2 \
+    --num_channels_dec 32 --channel_mult 1 2 2 2 --num_postprocess_blocks 2 --num_postprocess_cells 2 --num_cell_per_cond_dec 2 \
+    --seed 1 --num_process_per_node 1 --use_se
+
+python gpr_latent_dec_train.py --data ./datasets/gpr-lmdb --save ./checkpoints/latent_nn_test/dec --dataset gpr \
+    --epochs 100 --batch_size 4 --warmup_epochs 10 \
+    --weight_decay_norm 1e-2 --arch_instance res_bnswish \
+    --kl_anneal_portion 0.3 --kl_max_coeff 1.0 \
+    --num_nf 0 \
+    --num_latent_scales 2 --num_groups_per_scale 3 --num_latent_per_group 20 \
+    --num_channels_enc 32 --num_preprocess_blocks 2 --num_preprocess_cells 2 --num_cell_per_cond_enc 2 \
+    --num_channels_dec 32 --channel_mult 1 2 2 2 --num_postprocess_blocks 2 --num_postprocess_cells 2 --num_cell_per_cond_dec 2 \
+    --seed 1 --num_process_per_node 1 --use_se \
+    --latents ./latent_nn/latents/latent_nn/
