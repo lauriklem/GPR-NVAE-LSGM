@@ -1,0 +1,9 @@
+python train_vae.py --data ./datasets/gpr-lmdb --root ./checkpoints --save gpr_1to1/vae --dataset gpr \
+    --epochs 1000 --batch_size 4 --warmup_epochs 10 \
+    --weight_decay_norm 1e-2 --arch_instance res_bnswish \
+    --kl_anneal_portion 0.3 --kl_max_coeff 1.0 \
+    --num_nf 0 \
+    --num_latent_scales 3 --num_groups_per_scale 3 --num_latent_per_group 40 \
+    --num_channels_enc 32 --num_preprocess_blocks 2 --num_preprocess_cells 2 --num_cell_per_cond_enc 2 \
+    --num_channels_dec 32 --channel_mult 1 2 2 2 4 --num_postprocess_blocks 2 --num_postprocess_cells 2 --num_cell_per_cond_dec 2 \
+    --seed 1 --num_process_per_node 1 --use_se

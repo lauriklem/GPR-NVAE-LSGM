@@ -1,0 +1,24 @@
+# Test 1to1:
+python gpr_vae_1to1_test.py --checkpoint ./checkpoints/gpr_1to1/vae/checkpoint_epoch_350.pt --root ./samples/gpr_testing \
+    --interp_type linear
+
+python gpr_vae_1to1_test.py --checkpoint ./checkpoints/gpr_1to1/vae/checkpoint_epoch_280.pt --root ./samples/gpr_testing \
+    --interp_type spherical
+
+# Generate 1to1:
+python gpr_vae_1to1_generate.py --checkpoint ./checkpoints/gpr_1to1/vae/checkpoint_epoch_350.pt --root ./samples/gpr_testing \
+    --data ./datasets/gpr-lmdb \
+    --eval_mode sample --batch_size 1 --interp_type linear
+
+python gpr_vae_1to1_generate.py --checkpoint ./checkpoints/gpr_1to1/vae/checkpoint_epoch_280.pt --root ./samples/gpr_testing \
+    --data ./datasets/gpr-lmdb \
+    --eval_mode sample --batch_size 1 --interp_type spherical
+
+# scale analysis
+python gpr_vae_1to1_scale_analysis.py --checkpoint ./checkpoints/gpr_1to1/vae/checkpoint_epoch_350.pt --root ./samples/gpr_testing
+
+# Latent analysis
+python gpr_vae_1to1_latent_analysis.py --checkpoint ./checkpoints/gpr_1to1/vae/checkpoint_epoch_350.pt --root ./samples/gpr_testing --latent_index 0 --use_labels
+
+# Unconditional samples
+python gpr_vae_1to1_sample.py --checkpoint ./checkpoints/latent_nn/vae/checkpoint_epoch_540.pt --root ./samples/gpr_testing --seed 1

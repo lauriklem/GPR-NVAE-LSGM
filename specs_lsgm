@@ -1,0 +1,20 @@
+python train_vae.py --data ./datasets/gpr-lmdb --root ./checkpoints --save lsgm_test/vae --dataset gpr \
+    --epochs 500 --batch_size 4 --warmup_epochs 10 \
+    --weight_decay_norm 1e-2 --arch_instance res_bnswish \
+    --kl_anneal_portion 0.3 --kl_max_coeff 0.7 \
+    --num_nf 0 \
+    --num_latent_scales 1 --num_groups_per_scale 9 --num_latent_per_group 40 \
+    --num_channels_enc 64 --num_preprocess_blocks 2 --num_preprocess_cells 2 --num_cell_per_cond_enc 2 \
+    --num_channels_dec 64 --channel_mult 1 2 2 --num_postprocess_blocks 2 --num_postprocess_cells 2 --num_cell_per_cond_dec 2 \
+    --seed 1 --num_process_per_node 1 --use_se
+
+python train_vada.py --data ./datasets/gpr-lmdb --root ./checkpoints --save lsgm_test/lsgm --dataset gpr \
+    --vae_checkpoint ./checkpoints/lsgm_test/vae/checkpoint_epoch_100.pt \
+    --epochs 500 --batch_size 4 --warmup_epochs 10 \
+    --weight_decay_norm_vae 1e-2  --arch_instance res_bnswish \
+    --learning_rate_dae 2e-4 --learning_rate_min_dae 2e-4 --weight_decay_norm_dae 1e-2 \
+    --num_channels_dae 128 --num_scales_dae 3 --num_cell_per_scale_dae 10 --train_ode_eps 1e-3 --train_ode_solver_tol 1e-3 \
+    --sde_type vpsde --dropout 0.2 --embedding_scale 1000 --mixing_logit_init -6 \
+    --dae_arch ncsnpp --cont_kl_anneal \
+    --iw_sample_p ll_iw  --skip_final_eval --drop_inactive_var \
+    --num_process_per_node 1 --use_se --fir

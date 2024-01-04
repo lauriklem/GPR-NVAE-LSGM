@@ -1,0 +1,19 @@
+# Test 3to1:
+python gpr_vae_3to1_test.py --checkpoint ./checkpoints/gpr_3to1_final/vae/checkpoint_epoch_160.pt --root ./samples/gpr_testing
+
+
+# Generate 3to1:
+python gpr_vae_3to1_generate.py --checkpoint ./checkpoints/gpr_3to1_final/vae/checkpoint_epoch_160.pt --root ./samples/gpr_testing \
+    --data ./datasets/gpr-lmdb
+
+
+# scale analysis
+python gpr_vae_3to1_scale_analysis.py --checkpoint ./checkpoints/gpr_3to1_final/vae/checkpoint_epoch_160.pt --root ./samples/gpr_testing
+
+
+# Latent analysis
+python gpr_vae_3to1_latent_analysis.py --checkpoint ./checkpoints/gpr_3to1_final/vae/checkpoint_epoch_160.pt --root ./samples/gpr_testing --latent_index 0 --use_labels
+
+
+# unconditional samples:
+python gpr_vae_3to1_sample.py --checkpoint ./checkpoints/gpr_3to1_final/vae/checkpoint_epoch_160.pt --root ./samples/gpr_testing --seed 6

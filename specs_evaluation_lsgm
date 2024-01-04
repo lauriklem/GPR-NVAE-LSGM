@@ -1,0 +1,11 @@
+python gpr_lsgm_1to1_test.py --checkpoint ./checkpoints/lsgm_test/lsgm/checkpoint_ssim.pt --root ./samples/gpr_testing \
+    --ode_eps 1e-5 --ode_solver_tol 1e-5 --interp_type linear
+
+python gpr_lsgm_1to1_generate.py --checkpoint ./checkpoints/lsgm_test/lsgm/checkpoint_ssim.pt --root ./samples/gpr_testing \
+    --ode_eps 1e-5 --ode_solver_tol 1e-5 --interp_type linear
+
+python gpr_lsgm_1to1_latent_analysis.py --checkpoint ./checkpoints/lsgm_test/lsgm/checkpoint_ssim.pt --root ./samples/gpr_testing \
+    --ode_eps 1e-5 --ode_solver_tol 1e-5 --interp_type linear --latent_index 0 --use_labels
+
+
+
